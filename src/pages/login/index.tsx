@@ -75,9 +75,12 @@ export default function Login() {
       <Text style={style.textBottom}>
         Não tem conta?{' '}
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={{ color: themes.colors.primary }}>Crie agora!</Text>
+          <Text style={[style.textBottom, { color: themes.colors.primary, textDecorationLine: 'underline' }]}>
+            Crie agora!
+          </Text>
         </TouchableOpacity>
       </Text>
+
       
     </View>
   );

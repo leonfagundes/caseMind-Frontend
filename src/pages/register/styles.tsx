@@ -15,6 +15,27 @@ export const style = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 32,
   },
+  imagePicker: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: themes.colors.brightInputs,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: themes.colors.primary,
+  },
+  image: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+  },
+  imageText: {
+    color: themes.colors.softText,
+    textAlign: 'center',
+  },
   buttonContainer: {
     marginTop: 24,
     alignItems: 'center',

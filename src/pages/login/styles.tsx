@@ -40,6 +40,7 @@ export const style = StyleSheet.create({
     textBottom: {
         fontSize: 16,
         color: themes.colors.softText,
-        marginTop: -20
-    }
+        marginTop: -20,
+        lineHeight: 24,
+      },
 })
