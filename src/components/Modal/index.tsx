@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, TextInput, TouchableOpacity } from 'react-native';
 import { style } from './styles'; // Importando os estilos do modal
+import { themes } from '../../global/themes'; // Importando o tema para usar a cor
 
 type EditModalProps = {
   visible: boolean;
@@ -18,20 +19,24 @@ export default function EditModal({ visible, onClose, title, description, onSave
     <Modal visible={visible} transparent={true} animationType="fade">
       <View style={style.modalContainer}>
         <View style={style.modalContent}>
-          <Text style={style.modalTitle}>Editar</Text>
+          <Text style={style.modalTitle}>Editar Perfil</Text>
 
+          {/* Nome do Usuário */}
           <TextInput
             style={style.input}
             value={newTitle}
             onChangeText={setNewTitle}
-            placeholder="Título"
+            placeholder="Nome"
+            placeholderTextColor={themes.colors.softText}  
           />
           
+          {/* Email do Usuário */}
           <TextInput
             style={style.input}
             value={newDescription}
             onChangeText={setNewDescription}
-            placeholder="Descrição"
+            placeholder="Email"
+            placeholderTextColor={themes.colors.softText}
           />
 
           <View style={style.modalButtons}>
