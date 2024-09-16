@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Text, View, Image, Alert } from 'react-native';
-import logo from '../../assets/logoMind.png';
+import { Text, View, Image, Alert, TouchableOpacity } from 'react-native';
 import { style } from './styles';
 import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import { themes } from '../../global/themes';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { login } from '../../services/authService'; // Importa o serviço de login
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp<any>>();
@@ -17,19 +17,31 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(true);
 
+  // Função para realizar o login
   async function getLogin() {
     setLoading(true);
     try {
       if (!email || !password) {
+        setLoading(false);
         return Alert.alert('Atenção, informe os campos obrigatórios');
       }
 
-      navigation.navigate('BottomRoutes');
+      // Faz a chamada de login que retorna o token e as informações do usuário
+      const response = await login(email, password);
 
+      // Armazena o token e o userId no AsyncStorage
+      await AsyncStorage.setItem('token', response.token);
+      await AsyncStorage.setItem('userId', response.userId.toString());
+
+      // Exibe mensagem de sucesso
       Alert.alert('Logado com sucesso!');
-      console.log('Logado');
+      console.log('Usuário logado!', response);
+
+      // Redireciona para as rotas principais
+      navigation.navigate('BottomRoutes');
     } catch (error) {
-      console.log(error);
+      console.log('Erro ao tentar logar:', error);
+      Alert.alert('Erro', 'Falha ao tentar logar. Verifique suas credenciais.');
     } finally {
       setLoading(false);
     }
@@ -37,10 +49,11 @@ export default function Login() {
 
   return (
     <View style={style.container}>
+      {/* Estrutura da tela de login */}
       <View style={style.boxTop}>
         <Image
           style={style.logo}
-          source={logo}
+          source={require('../../assets/logoMind.png')}
           resizeMode="contain"
         />
       </View>
@@ -68,7 +81,7 @@ export default function Login() {
         <Button
           text="Entrar"
           loading={loading}
-          onPress={() => getLogin()}
+          onPress={getLogin} // Chama a função de login ao pressionar o botão
         />
       </View>
 
@@ -80,8 +93,6 @@ export default function Login() {
           </Text>
         </TouchableOpacity>
       </Text>
-
-      
     </View>
   );
 }

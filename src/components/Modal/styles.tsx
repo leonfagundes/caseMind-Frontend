@@ -47,4 +47,12 @@ export const style = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  // Campo adicional para o botão de adicionar tarefa
+  addTaskText: {
+    color: themes.colors.primary, // Defina a cor que deseja usar, por exemplo, a cor primária da sua aplicação
+    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 10,
+},
 });

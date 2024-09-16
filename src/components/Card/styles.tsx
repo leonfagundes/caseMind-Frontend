@@ -73,4 +73,30 @@ export const style = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  taskContainer: {
+    paddingLeft: 20,
+    marginTop: 10,
+  },
+  task: {
+    backgroundColor: themes.colors.brightInputs,
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 5,
+  },
+  taskTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: themes.colors.primary,
+  },
+  taskDescription: {
+    fontSize: 14,
+    color: themes.colors.softText,
+    marginTop: 4,
+  },
+  noTasksText: {
+    fontSize: 14,
+    color: themes.colors.softText,
+    marginTop: 10,
+  },
+  
 });

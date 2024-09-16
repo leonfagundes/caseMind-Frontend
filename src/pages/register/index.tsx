@@ -7,6 +7,8 @@ import { style } from './styles';
 import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import { themes } from '../../global/themes';
 import * as ImagePicker from 'expo-image-picker';  // Importando o image picker
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Importando para salvar o token
+import { registerUser } from '../../services/userService'; // Importando o serviço de registro
 
 export default function Register() {
   const navigation = useNavigation<NavigationProp<any>>();
@@ -21,7 +23,6 @@ export default function Register() {
 
   // Função para abrir o seletor de imagens
   async function pickImage() {
-    // Pedindo permissão para acessar as fotos
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       return Alert.alert('Precisamos de permissão para acessar suas fotos!');
@@ -33,10 +34,8 @@ export default function Register() {
       aspect: [4, 3],
       quality: 1,
     });
-    
-    // Verificando se a seleção foi cancelada
+
     if (!result.canceled) {
-      // Salvando a URI da imagem (agora é um array de 'assets')
       const selectedAsset = result.assets[0]; // Pegue o primeiro item da lista de assets
       setImage(selectedAsset.uri); // A propriedade 'uri' ainda está dentro do 'assets'
     } else {
@@ -44,32 +43,37 @@ export default function Register() {
     }
   }
 
-  function handleRegister() {
+  async function handleRegister() {
     setLoading(true);
 
     try {
-      // Verificar se os campos estão preenchidos
       if (!name || !email || !password || !confirmPassword) {
         setLoading(false);
         return Alert.alert('Atenção, preencha todos os campos!');
       }
 
-      // Verificar se as senhas coincidem
       if (password !== confirmPassword) {
         setLoading(false);
         return Alert.alert('As senhas não coincidem!');
       }
 
-      // Simulação de sucesso no cadastro
-      Alert.alert('Cadastro realizado com sucesso!');
+      const imageBlob = image ? await (await fetch(image)).blob() : null;
 
-      // Navegar diretamente para a Home, usando 'BottomRoutes'
+      // Chamando o serviço de registro
+      const user = await registerUser(name, email, password, imageBlob);
+
+      // Salvando o token no AsyncStorage
+      await AsyncStorage.setItem('token', user.token);
+
+      // Redirecionar para a Home após o cadastro
+      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
       navigation.reset({
         index: 0,
         routes: [{ name: 'BottomRoutes' }],
       });
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error('Erro ao tentar cadastrar:', error);
+      Alert.alert('Erro', 'Falha ao tentar cadastrar.');
     } finally {
       setLoading(false);
     }
@@ -79,7 +83,6 @@ export default function Register() {
     <View style={style.container}>
       <Text style={style.title}>Cadastrar-se</Text>
 
-      {/* Seletor de Imagem */}
       <TouchableOpacity style={style.imagePicker} onPress={pickImage}>
         {image ? (
           <Image source={{ uri: image }} style={style.image} />

@@ -1,53 +1,33 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, TextInput, TouchableOpacity } from 'react-native';
-import { style } from './styles'; // Importando os estilos do modal
-import { themes } from '../../global/themes'; // Importando o tema para usar a cor
+import { Modal, View, Text, TextInput, Button } from 'react-native';
+import { style } from './styles';
 
 type EditModalProps = {
   visible: boolean;
-  onClose: () => void;
   title: string;
-  description?: string;
-  onSave: (title: string, description: string) => void;
+  description: string;
+  onClose: () => void;
+  onSave: (name: string, description: string, deliveryDate: string) => void;
 };
 
-export default function EditModal({ visible, onClose, title, description, onSave }: EditModalProps) {
-  const [newTitle, setNewTitle] = useState(title);
-  const [newDescription, setNewDescription] = useState(description || '');
+export default function EditModal({ visible, title, description, onClose, onSave }: EditModalProps) {
+  const [name, setName] = useState(title);
+  const [desc, setDesc] = useState(description);
+  const [deliveryDate, setDeliveryDate] = useState('');
 
   return (
-    <Modal visible={visible} transparent={true} animationType="fade">
+    <Modal visible={visible} animationType="slide" transparent>
       <View style={style.modalContainer}>
         <View style={style.modalContent}>
-          <Text style={style.modalTitle}>Editar Perfil</Text>
+          <Text>Nome do Projeto</Text>
+          <TextInput value={name} onChangeText={setName} style={style.input} />
+          <Text>Descrição</Text>
+          <TextInput value={desc} onChangeText={setDesc} style={style.input} />
+          <Text>Data de Entrega</Text>
+          <TextInput value={deliveryDate} onChangeText={setDeliveryDate} style={style.input} placeholder="AAAA-MM-DD" />
 
-          {/* Nome do Usuário */}
-          <TextInput
-            style={style.input}
-            value={newTitle}
-            onChangeText={setNewTitle}
-            placeholder="Nome"
-            placeholderTextColor={themes.colors.softText}  
-          />
-          
-          {/* Email do Usuário */}
-          <TextInput
-            style={style.input}
-            value={newDescription}
-            onChangeText={setNewDescription}
-            placeholder="Email"
-            placeholderTextColor={themes.colors.softText}
-          />
-
-          <View style={style.modalButtons}>
-            <TouchableOpacity style={style.button} onPress={() => onSave(newTitle, newDescription)}>
-              <Text style={style.buttonText}>Salvar</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={style.button} onPress={onClose}>
-              <Text style={style.buttonText}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
+          <Button title="Salvar" onPress={() => onSave(name, desc, deliveryDate)} />
+          <Button title="Fechar" onPress={onClose} />
         </View>
       </View>
     </Modal>
